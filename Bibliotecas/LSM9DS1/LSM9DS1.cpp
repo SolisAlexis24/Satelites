@@ -2,7 +2,12 @@
 
 LSM9DS1::LSM9DS1(i2c_inst_t* i2c_port, mutex_t* i2c_mutex) 
     : i2c_port_(i2c_port),
-      gyro_div_scale_factor_(0), accel_div_scale_factor_(0), mag_div_scale_factor_(0), i2c_mutex_(i2c_mutex) {
+     i2c_mutex_(i2c_mutex) {
+}
+
+LSM9DS1::LSM9DS1(i2c_inst_t* i2c_port) 
+    : i2c_port_(i2c_port),
+      i2c_mutex_(nullptr) {
 }
 
 
@@ -138,7 +143,21 @@ void LSM9DS1::write_register(uint8_t addr, uint8_t reg, uint8_t val) {
 
 
 void LSM9DS1::read_bytes(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t len) {
-    mutex_enter_blocking(i2c_mutex_); // Asegurar acceso exclusivo al bus I2C
+    if(nullptr != i2c_mutex_){
+        mutex_enter_blocking(i2c_mutex_);
+        if(i2c_write_blocking(i2c_port_, addr, &reg, 1, true) != 1){
+            printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);
+            mutex_exit(i2c_mutex_);
+            return;   
+        }
+        mutex_exit(i2c_mutex_);
+        mutex_enter_blocking(i2c_mutex_);
+        if(i2c_read_blocking(i2c_port_, addr, buf, len, false) != len){
+            printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);      
+        }
+        mutex_exit(i2c_mutex_);
+        return;
+    }
     if(i2c_write_blocking(i2c_port_, addr, &reg, 1, true) != 1){
         printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);
         return;   
@@ -146,7 +165,6 @@ void LSM9DS1::read_bytes(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t len) {
     if(i2c_read_blocking(i2c_port_, addr, buf, len, false) != len){
         printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);      
     }
-    mutex_exit(i2c_mutex_); // Liberar acceso al bus I2C
 }
 
 
