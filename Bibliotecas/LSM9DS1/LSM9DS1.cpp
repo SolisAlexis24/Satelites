@@ -88,7 +88,7 @@ bool LSM9DS1::init_magnetometer(MAG_SCALES scale, MAG_ODR sample_rate) {
 }
 
 
-void LSM9DS1::calibrate_magnetometer(float offset_x, float offset_y, float offset_z){
+void LSM9DS1::set_offsets_mag(float offset_x, float offset_y, float offset_z){
     int16_t x = offset_x/mag_div_scale_factor_;
     int16_t y = offset_y/mag_div_scale_factor_;
     int16_t z = offset_z/mag_div_scale_factor_; // Se mapean los valores
@@ -112,6 +112,12 @@ void LSM9DS1::set_offsets_gyro(float offset_x, float offset_y, float offset_z){
     gyro_offset_x_ = offset_x;
     gyro_offset_y_ = offset_y;
     gyro_offset_z_ = offset_z;
+}
+
+void LSM9DS1::set_offsets_accel(float offset_x, float offset_y, float offset_z){
+    accel_offset_x_ = offset_x;
+    accel_offset_y_ = offset_y;
+    accel_offset_z_ = offset_z;
 }
 
 void LSM9DS1::read_sensor(uint64_t time_ms){
@@ -210,9 +216,9 @@ void LSM9DS1::read_accelerometer(float (&accel)[3]) {
     int16_t y = (buf[3] << 8) | buf[2];
     int16_t z = (buf[5] << 8) | buf[4];
     
-    accel[0] = x * accel_div_scale_factor_;
-    accel[1] = y * accel_div_scale_factor_;
-    accel[2] = z * accel_div_scale_factor_;
+    accel[0] = (x * accel_div_scale_factor_) - accel_offset_x_;
+    accel[1] = (y * accel_div_scale_factor_) - accel_offset_y_;
+    accel[2] = (z * accel_div_scale_factor_) - accel_offset_z_;
 }
 
 

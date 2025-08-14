@@ -138,13 +138,20 @@ public:
      * @brief Configura un offset al magnetometro sobre cada eje para corregir mediciones dispares en ejes
      * @param offset_i offset en Gauss que se restara a los valores del magnetometro en cada eje
      */
-    void calibrate_magnetometer(float offset_x, float offset_y, float offset_z);
+    void set_offsets_mag(float offset_x, float offset_y, float offset_z);
 
     /**
      * @brief Configura un offset al giroscopio sobre cada eje para corregir mediciones dispares en ejes
      * @param offset_i offset en dps que se restara a los valores del giroscopio en cada eje
      */
     void set_offsets_gyro(float offset_x, float offset_y, float offset_z);
+
+
+    /**
+     * @brief Configura un offset al giroscopio sobre cada eje para corregir mediciones dispares en ejes
+     * @param offset_i offset en dps que se restara a los valores del acelerometro en cada eje
+     */
+    void set_offsets_accel(float offset_x, float offset_y, float offset_z);
 
 
     /**
@@ -202,6 +209,9 @@ private:
     float gyro_offset_x_;
     float gyro_offset_y_;
     float gyro_offset_z_;
+    float accel_offset_x_;
+    float accel_offset_y_;
+    float accel_offset_z_;
 
     /**
      * @brief Lee un registro del sensor
