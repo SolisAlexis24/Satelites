@@ -148,8 +148,8 @@ public:
 
 
     /**
-     * @brief Configura un offset al giroscopio sobre cada eje para corregir mediciones dispares en ejes
-     * @param offset_i offset en dps que se restara a los valores del acelerometro en cada eje
+     * @brief Configura un offset al acelerometro sobre cada eje para corregir mediciones dispares en ejes
+     * @param offset_i offset en g que se restara a los valores del acelerometro en cada eje
      */
     void set_offsets_accel(float offset_x, float offset_y, float offset_z);
 
