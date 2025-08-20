@@ -5,15 +5,13 @@
 #include "pico/mutex.h"
 #include "LSM9DS1.h"
 
-// I2C defines
-// This example will use I2C0 on GPIO8 (SDA) and GPIO9 (SCL) running at 400KHz.
-// Pins can be changed, see the GPIO function select table in the datasheet for information on GPIO assignments
 #define I2C_PORT i2c0
 #define I2C_SDA 8
 #define I2C_SCL 9
 #define resolucion "%.4f"
 
-LSM9DS1 lsm(I2C_PORT);
+mutex_t *mi_mutex; // Necesario pero no utilizado en este entorno
+LSM9DS1 lsm(I2C_PORT, mi_mutex);
 
 
 int main()
@@ -45,15 +43,15 @@ int main()
         now = get_absolute_time();
         elapsed_ms = absolute_time_diff_us(start_time, now) / 1000;
         lsm.read_sensor(elapsed_ms);
-        printf("Acelerometro-> X: "resolucion", Y: "resolucion", Z: "resolucion"\n", 
+        printf("Acelerometro-> X: " resolucion ", Y: " resolucion ", Z: " resolucion "\n", 
             lsm.last_measurement.accel[0],
             lsm.last_measurement.accel[1],
             lsm.last_measurement.accel[2]);
-        printf("Giroscopio-> X: "resolucion", Y: "resolucion", Z: "resolucion"\n", 
+        printf("Giroscopio-> X: " resolucion ", Y: " resolucion ", Z: " resolucion "\n", 
             lsm.last_measurement.gyro[0],
             lsm.last_measurement.gyro[1],
             lsm.last_measurement.gyro[2]);
-        printf("Magnetometro-> X: "resolucion", Y: "resolucion", Z: "resolucion"\n", 
+        printf("Magnetometro-> X: " resolucion ", Y: " resolucion ", Z: " resolucion "\n", 
             lsm.last_measurement.mag[0],
             lsm.last_measurement.mag[1],
             lsm.last_measurement.mag[2]);

@@ -96,13 +96,6 @@ public:
      * @param i2c_mutex Mutex para proteger el acceso al bus I2C
      */
     LSM9DS1(i2c_inst_t* i2c_port, mutex_t* i2c_mutex);
-
-    /**
-     * @brief Constructor de la clase LSM9DS1
-     * 
-     * @param i2c_port Puerto I2C a utilizar (i2c0 o i2c1)
-     */
-    LSM9DS1(i2c_inst_t* i2c_port);
     
     /**
      * @brief Inicializa el acelerómetro y giroscopio

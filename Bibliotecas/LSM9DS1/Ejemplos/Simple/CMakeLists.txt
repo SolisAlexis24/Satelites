@@ -49,17 +49,13 @@ pico_enable_stdio_usb(Simple 0)
 # Add the standard library to the build
 target_link_libraries(Simple
         pico_stdlib
+        hardware_i2c
         LSM9DS1)
 
 # Add the standard include files to the build
 target_include_directories(Simple PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
 )
-
-# Add any user requested libraries
-target_link_libraries(Simple 
-        hardware_i2c
-        )
 
 pico_add_extra_outputs(Simple)
 

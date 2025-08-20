@@ -5,11 +5,6 @@ LSM9DS1::LSM9DS1(i2c_inst_t* i2c_port, mutex_t* i2c_mutex)
      i2c_mutex_(i2c_mutex) {
 }
 
-LSM9DS1::LSM9DS1(i2c_inst_t* i2c_port) 
-    : i2c_port_(i2c_port),
-      i2c_mutex_(nullptr) {
-}
-
 
 bool LSM9DS1::init_accel(GYRO_SCALES gyro_scale, ACCEL_SCALES accel_scale, AG_ODR gyro_odr, AG_ODR accel_odr) {
 
@@ -149,7 +144,6 @@ void LSM9DS1::write_register(uint8_t addr, uint8_t reg, uint8_t val) {
 
 
 void LSM9DS1::read_bytes(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t len) {
-    if(nullptr != i2c_mutex_){
         mutex_enter_blocking(i2c_mutex_);
         if(i2c_write_blocking(i2c_port_, addr, &reg, 1, true) != 1){
             printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);
@@ -163,14 +157,6 @@ void LSM9DS1::read_bytes(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t len) {
         }
         mutex_exit(i2c_mutex_);
         return;
-    }
-    if(i2c_write_blocking(i2c_port_, addr, &reg, 1, true) != 1){
-        printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);
-        return;   
-    }
-    if(i2c_read_blocking(i2c_port_, addr, buf, len, false) != len){
-        printf("LSM9DS1: Fallo al intentar leer el registro %02x\n", reg);      
-    }
 }
 
 
